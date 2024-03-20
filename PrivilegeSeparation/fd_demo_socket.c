@@ -34,7 +34,7 @@ switch (pid = fork()) {
   close(fds[1]);
   // open then send this descriptor over 
   int file = open("/etc/shadow", O_RDONLY);
-  if (sendfd(fds[0], &n, sizeof(n), (int) file) < 0) err(1, "sendfd");
+  if (sendfd(fds[0],(int) file) < 0) err(1, "sendfd");
   close(file);
 }
 
