@@ -14,7 +14,7 @@ class Person(PersonBase):
     username = Column(String(128), primary_key=True)
     profile = Column(String(5000), nullable=False, default="")
 
-# exercise 5
+# Created in Exercise 5
 class Cred(CredBase):
     __tablename__ = "cred"
     username = Column(String(128), primary_key=True)
@@ -22,7 +22,7 @@ class Cred(CredBase):
     token = Column(String(128))
     salt = Column(String(128)) # EX6
 
-# exercise 7
+# Created in Exercise 7
 class Bank(BankBase):
     __tablename__ = "bank"
     username = Column(String(128), primary_key=True)
@@ -65,7 +65,7 @@ def transfer_setup():
 import sys
 if __name__ == "__main__":
     if len(sys.argv) < 2:
-        print "Usage: %s [init-person|init-transfer|init-cred|init-bank]" % sys.argv[0]
+        print "Usage: %s [init-person|init-transfer|init-cred]" % sys.argv[0]
         exit(1)
 
     cmd = sys.argv[1]

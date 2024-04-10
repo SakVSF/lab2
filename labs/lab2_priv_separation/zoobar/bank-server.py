@@ -1,10 +1,6 @@
 #!/usr/bin/env python2
 #
 # Insert bank server code here.
-
-#!/usr/bin/env python2
-#
-# Insert bank server code here.
 #
 import rpclib
 import sys
@@ -13,12 +9,19 @@ from debug import *
 import auth_client
 
 
+
 def serialise_msg(sql_obj):
     return {c.name: getattr(sql_obj, c.name) for c in sql_obj.__mapper__.columns}
 
 class BankRpcServer(rpclib.RpcServer):
-  
-    def rpc_transfer(self,sender, recipient, zoobars):
+    ## Fill in RPC methods here.
+    # TODO: Add authentication method here
+    def rpc_transfer(self,sender, recipient, zoobars, token):
+        # Exercise 8 - Authenticate the request via token
+        if not auth_client.check_token(sender, token):
+            log("Transfer authentication failed") 
+            raise ValueError('Token is invalid')
+
         return bank.transfer(sender, recipient, zoobars)
 
     def rpc_balance(self, username):
@@ -28,8 +31,8 @@ class BankRpcServer(rpclib.RpcServer):
         res =  bank.get_log(username) # this function is crashing, with error that data is not a JSON - suspect is rpc issue
         return [serialise_msg(x) for x in res]
 
-    def rpc_account_creation(self, username):
-        return bank.account_creation(username)
+    def rpc_initalise_zoobars(self, username):
+        return bank.initalise_zoobars(username)
 
 (_, dummy_zookld_fd, sockpath) = sys.argv
 

@@ -42,10 +42,14 @@ def get_log(username):
 
 # Exercise 7 - Added interface for initialisation of zoobars
 
-def account_creation(username):
+def initalise_zoobars(username):
     db = bank_setup()
-    newbank = Bank()
-    newbank.username = username
-
-    db.add(newbank)
+    person = db.query(Bank).get(username)
+    # If somehow a profile doesnt exist but a bank entry exist, somehting is seriously wrong
+    if person:
+        return None
+    newbankentry = Bank()
+    newbankentry.username = username
+    # no need to initialise zoobars, SQL handle by default
+    db.add(newbankentry)
     db.commit()
