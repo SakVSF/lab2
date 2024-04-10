@@ -4,6 +4,7 @@ from debug import *
 import time
 
 def transfer(sender, recipient, zoobars):
+    # Exercise 7 - Swapped to bankDB
     bankdb = bank_setup()
     senderp = bankdb.query(Bank).get(sender)
     recipientp = bankdb.query(Bank).get(recipient)
@@ -38,10 +39,13 @@ def get_log(username):
     return db.query(Transfer).filter(or_(Transfer.sender==username,
                                          Transfer.recipient==username))
 
+
+# Exercise 7 - Added interface for initialisation of zoobars
+
 def account_creation(username):
-    bankdb= bank_setup()
+    db = bank_setup()
     newbank = Bank()
     newbank.username = username
-    bankdb.add(newbank)
-    bankdb.commit()
 
+    db.add(newbank)
+    db.commit()
