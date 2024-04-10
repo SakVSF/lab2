@@ -2,35 +2,42 @@
 #
 # Insert bank server code here.
 
+#!/usr/bin/env python2
 #
-
-import rpclib 
+# Insert bank server code here.
+#
+import rpclib
 import sys
 import bank
 from debug import *
-from sqlalchemy.orm import class_mapper
+import auth_client
 
-def serialise(model):
-    cols = [i.key for i in class_mapper(model.__class__).columns]
-    return dict((i, getattr(model, i)) for i in cols)
+
+def serialise_msg(sql_obj):
+    return {c.name: getattr(sql_obj, c.name) for c in sql_obj.__mapper__.columns}
 
 class BankRpcServer(rpclib.RpcServer):
-    def rpc_transfer(self, sender, recipient, zoobars):
+    ## Fill in RPC methods here.
+    # TODO: Add authentication method here
+    def rpc_transfer(self,sender, recipient, zoobars, token):
+        # Exercise 8 - Authenticate the request via token
+        if not auth_client.check_token(sender, token):
+            log("Transfer authentication failed") 
+            raise ValueError('Token is invalid')
+
         return bank.transfer(sender, recipient, zoobars)
 
-    def rp_balance(self, username):
+    def rpc_balance(self, username):
         return bank.balance(username)
 
     def rpc_get_log(self, username):
-        return [serialise(log) for log in bank.get_log(username)]
+        res =  bank.get_log(username) # this function is crashing, with error that data is not a JSON - suspect is rpc issue
+        return [serialise_msg(x) for x in res]
 
     def rpc_account_creation(self, username):
         return bank.account_creation(username)
 
-
 (_, dummy_zookld_fd, sockpath) = sys.argv
 
-s=BankRpcServer()
+s = BankRpcServer()
 s.run_sockpath_fork(sockpath)
-
-
