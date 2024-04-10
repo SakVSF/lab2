@@ -6,16 +6,27 @@ from debug import *
 
 PersonBase = declarative_base()
 TransferBase = declarative_base()
-CredBase = declarative_base()           #exercise 5
-BankBase = declarative_base()           #exercise 7
+CredBase = declarative_base()
+BankBase = declarative_base()
 
 class Person(PersonBase):
     __tablename__ = "person"
     username = Column(String(128), primary_key=True)
-    #password = Column(String(128))
-    #token = Column(String(128))
-    #zoobars = Column(Integer, nullable=False, default=10)
     profile = Column(String(5000), nullable=False, default="")
+
+# exercise 5
+class Cred(CredBase):
+    __tablename__ = "cred"
+    username = Column(String(128), primary_key=True)
+    password = Column(String(128)) # EX6: Swapped to hold hash, under same col
+    token = Column(String(128))
+    salt = Column(String(128)) # EX6
+
+# exercise 7
+class Bank(BankBase):
+    __tablename__ = "bank"
+    username = Column(String(128), primary_key=True)
+    zoobars = Column(Integer, nullable=False, default=10)
 
 class Transfer(TransferBase):
     __tablename__ = "transfer"
@@ -25,17 +36,6 @@ class Transfer(TransferBase):
     amount = Column(Integer)
     time = Column(String)
 
-class Cred(CredBase):          #exercise 5
-    __tablename__ = "cred"
-    username = Column(String(128), primary_key=True)
-    password = Column(String(128))
-    token = Column(String(128))
-    salt = Column(String(128)) #exercise 6
-
-class Bank(BankBase):
-    __tablename__ = "bank"
-    username = Column(String(128), primary_key = True)
-    zoobars = Column(Integer, nullable = False, default=10)
 
 def dbsetup(name, base):
     thisdir = os.path.dirname(os.path.abspath(__file__))
@@ -53,15 +53,14 @@ def dbsetup(name, base):
 def person_setup():
     return dbsetup("person", PersonBase)
 
-def transfer_setup():
-    return dbsetup("transfer", TransferBase)
-
 def cred_setup():
     return dbsetup("cred", CredBase)
 
-def bank_setup(): 
+def bank_setup():
     return dbsetup("bank", BankBase)
 
+def transfer_setup():
+    return dbsetup("transfer", TransferBase)
 
 import sys
 if __name__ == "__main__":
@@ -72,12 +71,11 @@ if __name__ == "__main__":
     cmd = sys.argv[1]
     if cmd == 'init-person':
         person_setup()
-    elif cmd == 'init-transfer':
-        transfer_setup()
-    elif cmd=='init-cred':
+    elif cmd == 'init-cred':
         cred_setup()
     elif cmd == 'init-bank':
         bank_setup()
-
+    elif cmd == 'init-transfer':
+        transfer_setup()
     else:
         raise Exception("unknown command %s" % cmd)
