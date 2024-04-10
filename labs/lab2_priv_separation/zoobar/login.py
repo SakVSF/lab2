@@ -3,9 +3,7 @@ from functools import wraps
 from debug import *
 from zoodb import *
 
-#import auth
 import auth_client
-#import bank
 import bank_client
 import random
 
@@ -28,8 +26,10 @@ class User(object):
         self.person = None
 
     def addRegistration(self, username, password):
+
         token = auth_client.register(username, password)
         if token is not None:
+              #Exercise 7 -  Lastly proceed to make a call to initialise zoobars
             bank_client.account_creation(username)
             return self.loginCookie(username, token)
         else:
