@@ -5,10 +5,10 @@ import rpclib
 
 
 
-def transfer(sender, recipient, zoobars, token):
+def transfer(sender, recipient, zoobars):
     ## Fill in code here.
     with rpclib.client_connect('/banksvc/sock') as c:
-        return c.call('transfer', sender=sender, recipient=recipient, zoobars=zoobars, token=token)
+        return c.call('transfer', sender=sender, recipient=recipient, zoobars=zoobars)
 
 def balance(username):
     ## Fill in code here.
