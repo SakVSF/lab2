@@ -20,7 +20,7 @@ def get_log(username):
     with rpclib.client_connect('/banksvc/sock') as c:
         return c.call('get_log', username=username)
 
-def initalise_zoobars(username):
+def account_creation(username):
     ## Fill in code here.
     with rpclib.client_connect('/banksvc/sock') as c:
-        return c.call('initalise_zoobars', username=username)
+        return c.call('account_creation', username=username)
