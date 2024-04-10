@@ -17,14 +17,8 @@ def serialise_msg(sql_obj):
     return {c.name: getattr(sql_obj, c.name) for c in sql_obj.__mapper__.columns}
 
 class BankRpcServer(rpclib.RpcServer):
-    ## Fill in RPC methods here.
-    # TODO: Add authentication method here
-    def rpc_transfer(self,sender, recipient, zoobars, token):
-        # Exercise 8 - Authenticate the request via token
-        if not auth_client.check_token(sender, token):
-            log("Transfer authentication failed") 
-            raise ValueError('Token is invalid')
-
+  
+    def rpc_transfer(self,sender, recipient, zoobars):
         return bank.transfer(sender, recipient, zoobars)
 
     def rpc_balance(self, username):
