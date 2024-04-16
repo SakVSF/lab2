@@ -56,9 +56,10 @@ cp /etc/resolv.conf /jail/etc/
 mkdir -p /jail/usr/share/zoneinfo
 cp -r /usr/share/zoneinfo/America /jail/usr/share/zoneinfo/
 
-create_socket_dir /jail/echosvc 61010:61010 755
-create_socket_dir /jail/authsvc 61016:61014 755
-create_socket_dir /jail/banksvc 61017:61014 755
+create_socket_dir /jail/echosvc 61010:61012 755
+create_socket_dir /jail/authsvc 61013:61012 755
+create_socket_dir /jail/banksvc 61014:61012 755
+
 
 mkdir -p /jail/tmp
 chmod a+rwxt /jail/tmp
@@ -74,31 +75,30 @@ python /jail/zoobar/zoodb.py init-transfer
 python /jail/zoobar/zoodb.py init-cred
 python /jail/zoobar/zoodb.py init-bank
 
-
-#exercise 3
-#set_perms 61012:61012 755 /jail/zoobar/db/person
-#set_perms 61012:61012 755 /jail/zoobar/db/person/person.db
-#set_perms 61012:61012 755 /jail/zoobar/db/transfer
-#set_perms 61012:61012 755 /jail/zoobar/db/transfer/transfer.db
-
-#exercise 4
-set_perms 61014:61014 770 /jail/zoobar/db/person
-set_perms 61014:61014 660 /jail/zoobar/db/person/person.db
+# HOTFIX, to make it writeable by the . Person used by Cred, Transfer used by Bank
+set_perms 61012:61012 770 /jail/zoobar/db/person
+set_perms 61012:61012 660 /jail/zoobar/db/person/person.db
 set_perms 61014:61014 700 /jail/zoobar/db/transfer
 set_perms 61014:61014 600 /jail/zoobar/db/transfer/transfer.db
 
-#exercise 5
-set_perms 61016:61014 700 /jail/zoobar/db/cred
-set_perms 61016:61014 600 /jail/zoobar/db/cred/cred.db
-#exercise 7 
-set_perms 61017:61017 700 /jail/zoobar/db/bank
-set_perms 61017:61017 600 /jail/zoobar/db/bank/bank.db
 
+set_perms 61013:61012 700 /jail/zoobar/db/cred
+set_perms 61013:61012 600 /jail/zoobar/db/cred/cred.db
+set_perms 61014:61014 700 /jail/zoobar/db/bank
+set_perms 61014:61014 600 /jail/zoobar/db/bank/bank.db
+
+# Hotfix to make echo server work now
 set_perms 61010:61010 755 /jail/zoobar/echo-server.py
-#exercise 5
-set_perms 61016:61014 700 /jail/zoobar/auth-server.py
-#exercise 7
-set_perms 61017:61017 700 /jail/zoobar/bank-server.py
 
-#exercise 4
-set_perms 61015:61015 755 /jail/zoobar/index.cgi 
+# For part 5 -- Auth service
+set_perms 61013:61012 700 /jail/zoobar/auth-server.py
+
+# For part 7 -- Bank service
+set_perms 61014:61014 700 /jail/zoobar/bank-server.py
+
+# ex4
+set_perms 61007:61007 755 /jail/zoobar/index.cgi
+
+# ex9
+create_socket_dir /jail/profilesvc 61006:61006 755
+set_perms 61006:61006 700 /jail/zoobar/profile-server.py
